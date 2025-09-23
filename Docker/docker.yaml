@@ -3,7 +3,7 @@ version: "1.2"
 services: 
   robot:
     image: tensorflow/tensorflow:latest-gpu
-    container_name: robot_container
+    container_name: robot_container_git
     tty: true
     stdin_open: true
     ports:
@@ -16,3 +16,4 @@ services:
 volumes: 
   app:
      driver: local
+
