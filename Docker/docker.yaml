@@ -7,7 +7,7 @@ services:
     tty: true
     stdin_open: true
     ports:
-      - "8080:80/tcp"
+      - "3000:3000/tcp"
     volumes:
       - app:/Training/
     environment:
@@ -16,4 +16,5 @@ services:
 volumes: 
   app:
      driver: local
+
 
