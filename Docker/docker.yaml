@@ -1,0 +1,18 @@
+version: "1.2"
+
+services: 
+  robot:
+    image: tensorflow/tensorflow:latest-gpu
+    container_name: robot_container
+    tty: true
+    stdin_open: true
+    ports:
+      - "8080:80/tcp"
+    volumes:
+      - app:/Training/
+    environment:
+      TZ: "Europe/Berlin"
+
+volumes: 
+  app:
+     driver: local
