@@ -21,4 +21,5 @@ services:
       
     # This command now runs inside /app, where requirements.txt is located
     # IMPORTANT: Replace 'your_main_script.py' with the actual name of your Python script
-    command: sh -c "pip install -r requirements.txt && python your_main_script.py"
+    #command: sh -c "pip install -r requirements.txt && python your_main_script.py"
+
