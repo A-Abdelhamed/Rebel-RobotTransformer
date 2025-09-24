@@ -7,6 +7,8 @@ services:
     
     # Give your container a consistent name
     container_name: my_tf_app
+    tty: true
+    stdin_open: true
     
     # This is the key step to "copy" your code.
     # It mounts the entire repository folder into the /app directory in the container.
