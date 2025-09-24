@@ -1,7 +1,6 @@
-pip install rlds dm-reverb[tensorflow]
-pip install jaxlib==0.4.38
-pip install jax==0.4.38
-pip uninstall -y jax-cuda12-pjrt jax-cuda12-plugin
-pip install "jax[cuda12_pip]==0.4.38" -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
-pip install flax
-pip install orbax-checkpointing
+rlds dm-reverb[tensorflow]
+jaxlib==0.4.38
+jax==0.4.38
+"jax[cuda12_pip]==0.4.38" -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
+flax
+orbax-checkpointing
