@@ -6,4 +6,4 @@ jax[cuda12_pip]==0.4.38
 dm-reverb[tensorflow]
 ipython
 matplotlib
-orbax-checkpoint
+orbax-checkpoint==0.4.4
