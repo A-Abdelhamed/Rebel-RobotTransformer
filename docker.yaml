@@ -1,12 +1,26 @@
 version: "3.8"
 
 services:
-  robot:
-    build: .                   # build the Dockerfile from repo
-    container_name: robot_container_git
-    tty: true
-    stdin_open: true
-    ports:
-      - "3000:3000"
-    environment:
-      - TZ=Europe/Berlin
+  app:
+    # Use the official TensorFlow image as the base
+    image: tensorflow/tensorflow:latest-gpu
+    
+    # Give your container a consistent name
+    container_name: my_tf_app
+    
+    # This is the key step to "copy" your code.
+    # It mounts the entire repository folder into the /app directory in the container.
+    volumes:
+      - .:/app
+      
+    # This sets the starting directory inside the container to /app.
+    working_dir: /app
+      
+    # This command runs after the container starts and the volume is mounted.
+    # It first installs your requirements and then starts your main Python script.
+    command: >
+      sh -c "pip install -r requirements.txt && python main.py"
+      
+    # You can add ports here if your application is a web server
+    # ports:
+    #   - "8000:8000"
