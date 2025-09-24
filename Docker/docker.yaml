@@ -11,7 +11,7 @@ services:
     
     # This maps the entire repository root into the /app directory in the container
     volumes:
-      - .:/app
+      - ${PWD}:/app
       
     # This sets the default directory for all subsequent commands
     working_dir: /app
@@ -22,5 +22,6 @@ services:
     # This command now runs inside /app, where requirements.txt is located
     # IMPORTANT: Replace 'your_main_script.py' with the actual name of your Python script
     command: sh -c "pip install -r requirements.txt && python your_main_script.py"
+
 
 
