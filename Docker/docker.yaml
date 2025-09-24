@@ -6,14 +6,6 @@ services:
     container_name: robot_container_git
     tty: true
     stdin_open: true
-    command: 
-      - pip install rlds dm-reverb[tensorflow]
-      - pip install jaxlib==0.4.38
-      - pip install jax==0.4.38
-      - pip uninstall -y jax-cuda12-pjrt jax-cuda12-plugin
-      - pip install "jax[cuda12_pip]==0.4.38" -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
-      - pip install flax
-      - pip install orbax-checkpointing
     ports:
       - "3000:3000/tcp"
     volumes:
@@ -24,6 +16,7 @@ services:
 volumes: 
   app:
      driver: local
+
 
 
 
