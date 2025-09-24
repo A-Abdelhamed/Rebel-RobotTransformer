@@ -1,23 +1,24 @@
-version: "1.2"
+version: "3.8" # It's good practice to use a more recent version like 3.8
 
-services: 
+services:
   robot:
     image: tensorflow/tensorflow:latest-gpu
     container_name: robot_container_git
-    working_dir: /app
-    command: sh -c "pip install -r requirements.txt" # Installs requirements on start
     tty: true
     stdin_open: true
     ports:
-      - "3000:3000/tcp"
+      - "3000:3000"
     volumes:
-      - app:/Training/
+      # This is the key change: Map the repo root to /Training/
+      - .:/Training/
+    working_dir: /Training/ # Sets the default directory inside the container
     environment:
-      TZ: "Europe/Berlin"
+      - TZ=Europe/Berlin
+    # You need a command to install requirements and run your code
+    command: sh -c "pip install -r requirements.txt && python your_main_script.py"
 
-volumes: 
-  app:
-     driver: local
+# The separate volumes definition is no longer needed for your code
+
 
 
 
