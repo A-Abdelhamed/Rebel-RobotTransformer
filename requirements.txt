@@ -2,8 +2,8 @@ flax
 rlds 
 tensorflow_datasets
 --find-links https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
-jax[cuda12_pip]==0.4.38
 dm-reverb[tensorflow]
 ipython
 matplotlib
+jax[cuda12_pip]==0.4.38
 orbax-checkpoint==0.4.4
