@@ -3,9 +3,9 @@ flax==0.8.4
 rlds
 tensorflow_datasets==4.9.9
 --find-links https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
+jax[cuda12_pip]
 dm-reverb==0.14.0
 ipython==7.34.0
 pillow==11.2.1
 matplotlib==3.7.2
-jax[cuda12_pip]
 orbax-checkpoint==0.4.4
