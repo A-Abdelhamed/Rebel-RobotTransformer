@@ -3,8 +3,8 @@ version: "3.8"
 services:
   app:
     # Use the official TensorFlow image as the base
-    image: python:3.11-slim
-    
+    image: tensorflow/tensorflow:2.15.0-gpu
+   
     # Give your container a consistent name
     container_name: my_tf_app
     tty: true
