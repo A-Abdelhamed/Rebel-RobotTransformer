@@ -5,5 +5,5 @@ tensorflow_datasets
 dm-reverb[tensorflow]
 ipython
 matplotlib
-jax[cuda12_pip]==0.4.38
+jax[cuda12_pip]
 orbax-checkpoint==0.4.4
