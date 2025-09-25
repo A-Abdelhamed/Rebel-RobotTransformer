@@ -21,7 +21,9 @@ services:
     # This command runs after the container starts and the volume is mounted.
     # It first installs your requirements and then starts your main Python script.
     command: >
-      sh -c "pip install -r requirements.txt && python containerTest.py"
+      sh -c "pip install -r requirements.txt && 
+      pip install -U "jax[cuda12_pip]" -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html && 
+      python containerTest.py"
     #  
     # You can add ports here if your application is a web server
     # ports:
