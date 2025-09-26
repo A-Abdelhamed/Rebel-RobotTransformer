@@ -18,15 +18,15 @@ services:
     # CORRECTED: Combines setup and execution into one command.
     # The container will stay running as long as containerTest.py is running.
     command: sh -c "
-    			pip install gdown &&
-            echo 'Downloading dataset from Google Drive...' &&
-            gdown 'https://drive.google.com/file/d/1w8T8aMhQjlx75vEjIdTK_zDwJPGzpkgy/view?usp=sharing' -O /app/stacking_blocks.zip &&
-            echo 'Unzipping dataset...' &&
-            unzip /app/stacking_blocks.zip -d /app/stacking_blocks &&
-            rm /app/stacking_blocks.zip &&
-            echo 'Starting application...'&&
-            tail -f /dev/null"
-            #pip install -r requirements.txt && python containerTest.py"
+      pip install gdown &&
+        echo 'Downloading dataset from Google Drive...' &&
+        gdown 'https://drive.google.com/file/d/1w8T8aMhQjlx75vEjIdTK_zDwJPGzpkgy/view?usp=sharing' -O /app/stacking_blocks.zip &&
+        echo 'Unzipping dataset...' &&
+        unzip /app/stacking_blocks.zip -d /app/stacking_blocks &&
+        rm /app/stacking_blocks.zip &&
+        echo 'Starting application...'&&
+        tail -f /dev/null"
+        #pip install -r requirements.txt && python containerTest.py"
 
     # GPU allocation - This part was already correct!
     deploy:
