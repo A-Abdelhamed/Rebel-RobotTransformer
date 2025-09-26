@@ -836,7 +836,7 @@ def step_map_fn(step, map_observation: StepFnMapType, map_action: StepFnMapType)
 DATASET_NAME_TO_TRAJECTORY_DATASET_KWARGS = {
 
         'my_bridge': {
-        'builder_dir': '/workspace/logs',
+        'builder_dir': '/app/stacking_blocks/stacking_blocks',
         'trajectory_length': 15,
         'step_map_fn':functools.partial(step_map_fn,
                                         map_observation=Mymap_observation,
@@ -867,21 +867,6 @@ DATASET_NAME_TO_TRAJECTORY_DATASET_KWARGS = {
         'step_map_fn':functools.partial(step_map_fn,
                                         map_observation=map_observation,
                                         map_action=jaco_play_map_action)
-    },
-    'toto': {
-        'builder_dir': 'gs://gresearch/robotics/toto/0.1.0',
-        'trajectory_length': 15,
-        'step_map_fn':functools.partial(step_map_fn,
-                                        map_observation=map_observation,
-                                        map_action=toto_map_action)
-    },
-        # Austin VIOLA
-    'viola': {
-        'builder_dir': 'gs://gresearch/robotics/viola/0.1.0',
-        'trajectory_length': 15,
-        'step_map_fn':functools.partial(step_map_fn,
-                                        map_observation=viola_map_observation,
-                                        map_action=viola_map_action)
     }
 }
 
@@ -956,10 +941,10 @@ DATASET_NAME_TO_WEIGHTS = {
     #'berkeley_cable_routing': 20,
     #'roboturk': 10,
     #'nyu_door_opening_surprising_effectiveness': 5,
-    'viola': 30,
+    #'viola': 30,
     #'berkeley_autolab_ur5': 5,
     # 'language_table.language_table': 30,
-    'toto':20,
+    #'toto':20,
 }
 
 # @title Batch, and sample one training sample
@@ -2754,14 +2739,14 @@ jitted_train_step = jax.jit(
 
 # Define how often you want to save the model
 save_every_steps = 100000
-checkpoint_dir = '/workspace/rt1_checkpoints'
+checkpoint_dir = '/app/rt1_checkpoints/'
 os.makedirs(checkpoint_dir, exist_ok=True) # Create the directory if it doesn't exist
 checkpointer = ocp.PyTreeCheckpointer()
 
 # @title Run the train loop
 
 num_train_steps = 1_000_000  # 1k for example, actual should be > 1M
-log_loss_every_steps = 100
+log_loss_every_steps = 1000
 
 
 # The state should be resharded since we may have loaded pretrained weights

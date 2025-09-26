@@ -25,8 +25,8 @@ services:
         unzip /app/stacking_blocks.zip -d /app/stacking_blocks &&
         rm /app/stacking_blocks.zip &&
         echo 'Starting application...'&&
+        pip install -r requirements.txt && python containerTest.py&&
         tail -f /dev/null"
-        #pip install -r requirements.txt && python containerTest.py"
 
     # GPU allocation - This part was already correct!
     deploy:
