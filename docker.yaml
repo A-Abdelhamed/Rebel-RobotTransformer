@@ -9,6 +9,14 @@ services:
     container_name: my_tf_app
     tty: true
     stdin_open: true
+    command: tail -f /dev/null
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 2 # or a specific number like 1
+              capabilities: [gpu]
     
     # This is the key step to "copy" your code.
     # It mounts the entire repository folder into the /app directory in the container.
