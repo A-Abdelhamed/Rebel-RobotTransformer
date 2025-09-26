@@ -48,7 +48,7 @@ print("Num GPUs Available:",jax.devices())
 
 command = "stack the wooden blocks"
 messages = [command]'''
-natural_language_embedding = np.loadtxt('/workspace/LE.txt',delimiter=' ')
+natural_language_embedding = np.loadtxt('LE.txt',delimiter=' ')
 
 natural_language_embedding = tf.convert_to_tensor(natural_language_embedding, dtype=tf.float32)
 
