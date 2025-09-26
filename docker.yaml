@@ -20,7 +20,7 @@ services:
     command: sh -c "
       pip install gdown &&
         echo 'Downloading dataset from Google Drive...' &&
-        gdown 'https://drive.google.com/file/d/1w8T8aMhQjlx75vEjIdTK_zDwJPGzpkgy/view?usp=sharing' -O /app/stacking_blocks.zip &&
+        gdown 'https://drive.google.com/uc?id=1w8T8aMhQjlx75vEjIdTK_zDwJPGzpkgy' -O /app/stacking_blocks.zip &&
         echo 'Unzipping dataset...' &&
         unzip /app/stacking_blocks.zip -d /app/stacking_blocks &&
         rm /app/stacking_blocks.zip &&
