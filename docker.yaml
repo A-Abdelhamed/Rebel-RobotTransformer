@@ -26,7 +26,7 @@ services:
         #rm /app/stacking_blocks.zip &&
         #echo 'Starting application...'&&
         #pip install -r requirements.txt && 
-        #pip install "jax[cuda12_pip]" -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html &&
+        #pip install "jax[cuda12_pip]==0.4.38" -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html &&
         #python containerTest.py &&
         #tail -f /dev/null"
 
