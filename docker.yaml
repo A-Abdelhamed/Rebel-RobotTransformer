@@ -36,7 +36,7 @@ services:
         reservations:
           devices:
             - driver: nvidia
-              count: all
+              device_ids: ['0', '1']
               capabilities: [gpu]
     
     # Optional: Keep these if you need to manually attach to the container
