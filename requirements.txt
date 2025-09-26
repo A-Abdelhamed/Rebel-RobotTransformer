@@ -1,11 +1,11 @@
 numpy==1.26.4
-flax==0.8.4
+flax==0.8.0
 rlds
 tensorflow_datasets==4.9.9
-jax==0.4.38
-jaxlib==0.4.38
+jax==0.4.23
+jaxlib==0.4.23
 --find-links https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
-jax[cuda12_pip]==0.4.38
+jax[cuda12_pip]==0.4.23
 dm-reverb==0.14.0
 ipython==7.34.0
 pillow==11.2.1
