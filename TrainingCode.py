@@ -870,6 +870,8 @@ DATASET_NAME_TO_TRAJECTORY_DATASET_KWARGS = {
     }
 }
 
+print(f"Datasets Downloaded")
+
 '''
     #  Task Agnostic Robot Play
     'my_bridge': {
@@ -1004,6 +1006,7 @@ dense_kernel_init_fn = nn.initializers.variance_scaling(
     1 / 3.0, 'fan_out', 'uniform'
 )
 
+print("RT-X started")
 #########################################################################################################################################
 class FilmConditioning(nn.Module):
   """FiLM conditioning layer."""
@@ -2290,6 +2293,7 @@ class RT1(nn.Module):
     return default_attn_mask - action_mask
 
 #########################################################################################################################################
+
 SEQUENCE_LENGTH = 15
 NUM_ACTION_TOKENS = 11
 LAYER_SIZE = 256
@@ -2754,6 +2758,8 @@ log_loss_every_steps = 1000
 state_repl = reshard(state, shardings=replicate_sharding)
 # The RNG must be replicated.
 rng_repl = reshard(rng, shardings=replicate_sharding)
+
+print("Training started")
 
 for step in range(num_train_steps):
   is_last_step = step == num_train_steps
