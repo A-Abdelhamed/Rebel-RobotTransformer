@@ -4,36 +4,34 @@ services:
   app:
     # Use the official TensorFlow image as the base
     image: tensorflow/tensorflow:2.15.0-gpu
-   
+    
     # Give your container a consistent name
     container_name: my_tf_app
-    tty: true
-    stdin_open: true
-    command: tail -f /dev/null
+    
+    # Mounts the current folder into the /app directory in the container
+    volumes:
+      - .:/app
+      
+    # Sets the starting directory inside the container to /app
+    working_dir: /app
+
+    # CORRECTED: Combines setup and execution into one command.
+    # The container will stay running as long as containerTest.py is running.
+    command: sh -c "pip install -r requirements.txt && python containerTest.py"
+
+    # GPU allocation - This part was already correct!
     deploy:
       resources:
         reservations:
           devices:
             - driver: nvidia
-              count: 2 # or a specific number like 1
+              count: all
               capabilities: [gpu]
     
-    # This is the key step to "copy" your code.
-    # It mounts the entire repository folder into the /app directory in the container.
-    volumes:
-      - .:/app
-      
-    # This sets the starting directory inside the container to /app.
-    working_dir: /app
-      
-    # This command runs after the container starts and the volume is mounted.
-    # It first installs your requirements and then starts your main Python script.
-    command: >
-    #sh -c "pip install -r requirements.txt && python containerTest.py"
-    #  
-    # You can add ports here if your application is a web server
+    # Optional: Keep these if you need to manually attach to the container
+    tty: true
+    stdin_open: true
+
+    # Optional: Uncomment this section if your app is a web server
     # ports:
-
     #   - "8000:8000"
-
-
