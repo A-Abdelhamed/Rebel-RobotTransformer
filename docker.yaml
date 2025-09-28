@@ -43,5 +43,6 @@ services:
     stdin_open: true
 
     # Optional: Uncomment this section if your app is a web server
-    # ports:
-    #   - "8000:8000"
+    ports:
+          # Maps port 2222 on your server to port 22 (SSH) in the container
+      - "2222:22"
