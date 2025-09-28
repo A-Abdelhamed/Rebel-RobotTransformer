@@ -23,13 +23,7 @@ services:
               device_ids: ['0', '1']
               capabilities: [gpu]
 
-        # CORRECTED: Combines setup and execution into one command.
-    # The container will stay running as long as containerTest.py is running.
-    command: sh -c "
-        pip install gdown &&
-        pip install -r requirements.txt && 
-        pip install "jax[cuda12_pip]==0.4.38" -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html &&
-        tail -f /dev/null"
+        # CORRECTED: Combines setup and execution into one command
 
     
     # Optional: Keep these if you need to manually attach to the container
