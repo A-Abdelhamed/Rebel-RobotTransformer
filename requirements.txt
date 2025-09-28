@@ -6,4 +6,4 @@ dm-reverb
 ipython
 pillow
 matplotlib
-orbax-checkpoint
+orbax-checkpoint==0.11.0
