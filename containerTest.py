@@ -2787,4 +2787,5 @@ for step in range(num_train_steps):
   if step % save_every_steps == 0 or is_last_step:
     # Now, save the full training state
     save_path = os.path.join(checkpoint_dir, f'step_{step}')
-    checkpointer.save(save_path, args=ocp.args.StandardSave(state_repl))
+    # This is the corrected line
+    checkpointer.save(save_path, args=ocp.args.PyTreeSave(item=state_repl))
