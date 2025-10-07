@@ -6,7 +6,7 @@ services:
     image: tensorflow/tensorflow:2.15.0-gpu
     
     # Give your container a consistent name
-    container_name: my_tf_app
+    container_name: rt-training
     
     # Mounts the current folder into the /app directory in the container
     volumes:
