@@ -33,4 +33,4 @@ services:
     # Optional: Uncomment this section if your app is a web server
     ports:
           # Maps port 2222 on your server to port 22 (SSH) in the container
-      - "6666:66"
+      - "8888:88"
