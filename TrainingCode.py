@@ -32,6 +32,7 @@ import functools
 from typing import Callable, Sequence
 import matplotlib.pyplot as plt
 #import tensorflow_hub as hub
+from flax.training import checkpoints
 import orbax.checkpoint as ocp
 import os
 
@@ -455,30 +456,6 @@ def resize_to_resolution(
     image = image.numpy()
   return image
 
-
-def Mymap_observation(
-    to_step: rlds.Step,
-    from_step: rlds.Step,
-    from_image_feature_names: tuple[str, ...] = ('image',),
-    to_image_feature_names: tuple[str, ...] = ('image',),
-    resize: bool = True,
-) -> None:
-  """Map observation to model observation spec."""
-  print(from_step.get('language_embedding'))
-  to_step[rlds.OBSERVATION]['natural_language_embedding'] = natural_language_embedding
-    
-
-  for from_feature_name, to_feature_name in zip(
-      from_image_feature_names, to_image_feature_names
-  ):
-    if resize:
-      to_step['observation'][to_feature_name] = resize_to_resolution(
-          from_step['observation'][from_feature_name],
-          to_numpy=False,
-          target_width=320,
-          target_height=256,
-      )
-
 def map_observation(
     to_step: rlds.Step,
     from_step: rlds.Step,
@@ -835,11 +812,11 @@ def step_map_fn(step, map_observation: StepFnMapType, map_action: StepFnMapType)
 
 DATASET_NAME_TO_TRAJECTORY_DATASET_KWARGS = {
 
-        'my_bridge': {
-        'builder_dir': '/app/stacking_blocks/stacking_blocks',
-        'trajectory_length': 15,
+      'IgusToolPicking': {
+        'builder_dir': '/app/IgusToolPicking/IgusToolPicking',
+        'trajectory_length': 50,
         'step_map_fn':functools.partial(step_map_fn,
-                                        map_observation=Mymap_observation,
+                                        map_observation=map_observation,
                                         map_action=bridge_map_action)
     },
     
@@ -867,6 +844,21 @@ DATASET_NAME_TO_TRAJECTORY_DATASET_KWARGS = {
         'step_map_fn':functools.partial(step_map_fn,
                                         map_observation=map_observation,
                                         map_action=jaco_play_map_action)
+    },
+      # Austin VIOLA
+    'viola': {
+        'builder_dir': 'gs://gresearch/robotics/viola/0.1.0',
+        'trajectory_length': 15,
+        'step_map_fn':functools.partial(step_map_fn,
+                                        map_observation=viola_map_observation,
+                                        map_action=viola_map_action)
+    },
+    'toto': {
+        'builder_dir': 'gs://gresearch/robotics/toto/0.1.0',
+        'trajectory_length': 15,
+        'step_map_fn':functools.partial(step_map_fn,
+                                        map_observation=map_observation,
+                                        map_action=toto_map_action)
     }
 }
 
@@ -937,16 +929,16 @@ DATASET_NAME_TO_TRAJECTORY_DATASET = {k: get_trajectory_dataset(**v) for k, v in
 DATASET_NAME_TO_WEIGHTS = {
     'rt_1': 50,
     # 'rlds.kuka': 20,
-    'my_bridge': 100,
+    'IgusToolPicking': 100,
     'taco_play': 20,
     'jaco_play': 20,
     #'berkeley_cable_routing': 20,
     #'roboturk': 10,
     #'nyu_door_opening_surprising_effectiveness': 5,
-    #'viola': 30,
+    'viola': 30,
     #'berkeley_autolab_ur5': 5,
-    # 'language_table.language_table': 30,
-    #'toto':20,
+    #'language_table.language_table': 30,
+    'toto':20,
 }
 
 # @title Batch, and sample one training sample
@@ -2728,11 +2720,76 @@ def _form_gda(local_data, global_shape):
 
 rng = jax.random.PRNGKey(0)
 
-sample_batch = jax.tree_map(_form_gda, sample_batch, global_data_shape)
-rng, agent_rng = jax.random.split(rng)
-state = create_train_state_jit(
-    batch=sample_batch, rng=agent_rng
-)
+# --- Define the path to your downloaded checkpoint ---
+PRETRAINED_PATH = '/app/rt_1_x_jax'  # The folder
+
+checkpointer = ocp.PyTreeCheckpointer()
+
+if os.path.exists(PRETRAINED_PATH):
+    print(f"Loading pre-trained checkpoint from: {PRETRAINED_PATH}")
+    
+    # 1. Get a sample batch to know the data structure
+    sample_batch = jax.tree_map(lambda x: x, next(train_iter))
+    
+    # 2. Restore the pre-trained model weights (params) and batch stats
+    restored_params = checkpointer.restore(PRETRAINED_PATH, item='params')
+    restored_batch_stats = checkpointer.restore(PRETRAINED_PATH, item='batch_stats')
+
+    # 3. Create a new TrainState
+    #    We use the LOADED weights but create a FRESH optimizer state
+    state = TrainState(
+        step=0,  # Start fine-tuning from step 0
+        params=restored_params,
+        batch_stats=restored_batch_stats,
+        opt_state=optimizer.init(restored_params) # Re-initialize the optimizer
+    )
+    print("✅ Successfully loaded pre-trained weights. Starting fine-tuning.")
+
+else:
+    print(f"WARNING: Pre-trained path not found. Initializing from scratch...")
+    sample_batch = jax.tree_map(_form_gda, sample_batch, global_data_shape)
+    rng, agent_rng = jax.random.split(rng)
+    state = create_train_state_jit(
+        batch=sample_batch, rng=agent_rng
+    )
+    
+'''
+rng = jax.random.PRNGKey(0)
+
+# --- Define the path to your downloaded checkpoint ---
+PRETRAINED_PATH = '/app/rt_1_x_jax'  # The folder you downloaded
+
+if os.path.exists(PRETRAINED_PATH):
+    print(f"Loading pre-trained checkpoint from: {PRETRAINED_PATH} using flax.training.checkpoints")
+
+    # 1. Restore the checkpoint using the legacy loader
+    # We pass `target=None` to just load the raw dictionary from the file
+    state_dict = checkpoints.restore_checkpoint(PRETRAINED_PATH, target=None)
+
+    # 2. Extract the weights
+    restored_params = state_dict['params']
+    restored_batch_stats = state_dict['batch_stats']
+
+    # 3. Create a new TrainState
+    #    We use the LOADED weights but create a FRESH optimizer state
+    state = TrainState(
+        step=0,  # Start fine-tuning from step 0
+        params=restored_params,
+        batch_stats=restored_batch_stats,
+        opt_state=optimizer.init(restored_params) # Re-initialize the optimizer
+    )
+    print("✅ Successfully loaded pre-trained weights. Starting fine-tuning.")
+
+else:
+    print(f"WARNING: Pre-trained path not found ({PRETRAINED_PATH}). Initializing from scratch...")
+    # This is the original "train from scratch" code
+    sample_batch = jax.tree_map(_form_gda, sample_batch, global_data_shape)
+    rng, agent_rng = jax.random.split(rng)
+    state = create_train_state_jit(
+        batch=sample_batch, rng=agent_rng
+    )
+
+'''
 
 # Create the train step.
 agent_train = functools.partial(train, model=rt1x_model, optimizer=optimizer)
@@ -2745,7 +2802,6 @@ jitted_train_step = jax.jit(
 save_every_steps = 100000
 checkpoint_dir = '/app/rt1_checkpoints/'
 os.makedirs(checkpoint_dir, exist_ok=True) # Create the directory if it doesn't exist
-checkpointer = ocp.PyTreeCheckpointer()
 
 # @title Run the train loop
 
@@ -2778,7 +2834,16 @@ for step in range(num_train_steps):
     print(f"Metrics: step={step}, {metrics_update}")
     
   if step % save_every_steps == 0 or is_last_step:
-    # Now, save the full training state
-    save_path = os.path.join(checkpoint_dir, f'step_{step}')
-    # This is the corrected line
-    checkpointer.save(save_path, args=ocp.args.PyTreeSave(item=state_repl))
+    # Get the state from the first device
+    state_to_save = jax.device_get(jax.tree_util.tree_map(lambda x: x[0], state_repl))
+    
+    # Save using the legacy flax.training.checkpoints
+    checkpoints.save_checkpoint(
+        ckpt_dir=checkpoint_dir,
+        target=state_to_save,
+        step=step,
+        prefix='checkpoint_',
+        keep=3,  # This will keep the 3 most recent checkpoints
+        overwrite=True
+    )
+    print(f"✅ Legacy checkpoint saved for step: {step}")
