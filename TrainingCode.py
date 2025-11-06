@@ -948,8 +948,12 @@ for name, dataset in DATASET_NAME_TO_TRAJECTORY_DATASET.items():
 
 dataset = tf.data.Dataset.sample_from_datasets(datasets, weights=weights)
 
+# --- ADD THIS LINE ---
+# This tells the dataset to loop forever.
+dataset = dataset.repeat()
+
 # Larger shuffle buffer leads to better performance, but consumes more RAM
-dataset = dataset.shuffle(1)
+dataset = dataset.shuffle(100)
 
 dataset = dataset.batch(BATCH_SIZE)
 
