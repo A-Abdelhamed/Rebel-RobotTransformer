@@ -8,13 +8,18 @@ services:
     # Give your container a consistent name
     container_name: rt-training
     
-    # Mounts the current folder into the /app directory in the container
+    # Mounts the current folder (which includes your key) into /app
     volumes:
       - .:/app
       
     # Sets the starting directory inside the container to /app
     working_dir: /app
-    # GPU allocation - This part was already correct!
+
+    # This tells Google tools to use your key file automatically
+    environment:
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/docker-downloader-92646cf12baa.json
+      
+    # GPU allocation
     deploy:
       resources:
         reservations:
@@ -23,14 +28,21 @@ services:
               device_ids: ['0', '1']
               capabilities: [gpu]
 
-        # CORRECTED: Combines setup and execution into one command
+    # --- THIS COMMAND SECTION DOES ALL YOUR SETUP ---
+    command: sh -c "
+        apt-get update && 
+        apt-get install -y openssh-server unzip gdown &&
+        sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config &&
+        mkdir -p /run/sshd &&
+        /usr/sbin/sshd &&
+        echo 'Container is set up, authenticated, and SSH is running.' &&
+        echo 'Ready for you to connect and run commands manually.' &&
+        tail -f /dev/null"
 
-    
-    # Optional: Keep these if you need to manually attach to the container
+    # Keep these to allow you to attach
     tty: true
     stdin_open: true
 
-    # Optional: Uncomment this section if your app is a web server
+    # Your port mapping
     ports:
-          # Maps port 2222 on your server to port 22 (SSH) in the container
       - "9090:90"

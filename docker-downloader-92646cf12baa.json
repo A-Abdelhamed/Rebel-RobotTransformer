@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "docker-downloader",
+  "private_key_id": "92646cf12baade6bc7a314692f9ced11e48b7515",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCi/NRLKvCEOxua\nCxb4+Js5zBxY3syUtHsxAN3sbNqWe1if5mgcTL4fW626N1PmDW/UyGmFCHZKtoIm\np69+PN2Y2xQclfMRZXNll5QTfzmnCkkAo59qzCvcFr/lyrpPfkFFeItHIGLZHBUC\nUrQsybH+M8ynZKj1LTAXi1ju5/b1elV5WnuK8NWBNDrRAD5Qq+iRepyo+Fvn5Ebn\nPt55Ib0MlAB9arJUBntY+TLd6xT/uaTQAZpzEFaoi0/54jpEpKf+4Fx7LlaB+6JC\nRgBA1vN8VUVDYY9B7C/kMqDEASzHpKhUjccdgada3+1Cx+gWGdm948dzPzf9JoVJ\nFR9Z5xaJAgMBAAECggEADLtiXBLZIgM6B0EJhN5qxcuPhVO2OIGWw/+01lS0iJ/P\nDwKhLGDEU0/GlO7gg26WR1F2iLleAD0ckqdzupFHoDqw6gC+saOyrYN3QkSkfMt9\nY2rkt6OGY5V1XR6GilIrCCHAA4jgn+QlMf7C62LAIELsoEDpP+nNQXGVu2fsb0WE\nlrEGkB8LYCvtRzw0VY/VDHTWgx+BIRMZGEqCnxN+T0tSxIpzwJ1oZr2eiKJylS0C\n40EQzlCXK3Xc5BG3IPxfDUzwLaafZ60rMRjI76yx1rulgm0jbQf1yNIW/NDO/OaN\nvRGaVtOkW/4EhHNTRpF0/+MF5f5DKPljHMXLmXxWfwKBgQDiHvFPQduDUR1Xi5b4\n05Iqv/kC7alEhcV9fPjaobEepBHLe9+s3XLrM6LsO9r5TdWT0mhktlPlZjmvs5Iz\nIG0fj4dfI+6UQbqUyYr6NtmrVwIADJHVSX30db4xBm54tTXiU6U/3fJNX/gvW12r\n3uFBIY7oO5XYLSEFDbKhqmfuYwKBgQC4hkJoDxjlhDUeRM/gw/lh/rdh4M/Q+PLZ\nWOQ8HiQd9NDPxya/M/Y/NJzLSIe1gPTW/yalTdr/BTYUsH4fW9jr/G/XyF676REh\nKQYhF/v0vcQRuv3wN54SMDrj9ON/AaEFeocyyyZIK/DxNefPqRIQYVMbhcLefPYF\nIw/dQX01IwKBgQDSu42elLzUHANhdFkl2l8tci3Ked03XAgalB6D+w7LhJKE9hQV\n0WfpJP1gdcP0dYJnOj9KJNX5Q5TdV1gYR88LC8NYem89Qih1w4K+/+FKGlNl4lEC\n2nQFILo4jErmOdNW8yddZyYK0DbHQ7n/lD6PaYv6iJV0m1JbmFFy8xHbCwKBgCoP\nIC/L0SbvfZQKpz9aLAu0HWSH85Z0SBZWdp9lV2IknTve7uwCEgzSFzMWsygh3qzq\nt4pSNqqOK4eHuxe2vbj8bxnGKCG4vBjM2wLMDrf4USqhbqREaRlIOQQgm4IlguhW\nx15Cg9VLfr3cRZxFs0JcjK7nTEWeQg1lsoYCGWH1AoGBAJo2bpGlJvPGMVedLhrF\nHqK7Ubax/ACm36T0p+OdZyntzRGbz79vOu7Z03SFwI9SS2iJiFimbgfQQssTk4M0\nUHIcb+LXzJzXgU4O87CATqnOdvYhjTbVbDS2DAE74swtnXwHMJ4vLkJXs9Qyyqna\nh3FPjW8QM7ZAKXYklQcj8Ekf\n-----END PRIVATE KEY-----\n",
+  "client_email": "docker-downloader@docker-downloader.iam.gserviceaccount.com",
+  "client_id": "104979745342001251281",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/docker-downloader%40docker-downloader.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
