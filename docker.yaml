@@ -15,8 +15,9 @@ services:
     # Sets the starting directory inside the container to /app
     working_dir: /app
 
-    # This tells Google tools to use your key file automatically
+    # --- THIS IS THE ONLY PART YOU NEED FOR AUTHENTICATION ---
     environment:
+      # This tells Google tools to use your key file automatically
       - GOOGLE_APPLICATION_CREDENTIALS=/app/docker-downloader-92646cf12baa.json
       
     # GPU allocation
@@ -28,16 +29,8 @@ services:
               device_ids: ['0', '1']
               capabilities: [gpu]
 
-    # --- THIS COMMAND SECTION DOES ALL YOUR SETUP ---
-    command: sh -c "
-        apt-get update && 
-        apt-get install -y openssh-server unzip gdown &&
-        sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config &&
-        mkdir -p /run/sshd &&
-        /usr/sbin/sshd &&
-        echo 'Container is set up, authenticated, and SSH is running.' &&
-        echo 'Ready for you to connect and run commands manually.' &&
-        tail -f /dev/null"
+    # This command just keeps the container running so you can connect
+    command: tail -f /dev/null
 
     # Keep these to allow you to attach
     tty: true
