@@ -943,13 +943,12 @@ weights = []
 
 for name, dataset in DATASET_NAME_TO_TRAJECTORY_DATASET.items():
 
-  datasets.append(dataset.shuffle(10))
+  datasets.append(dataset.shuffle(100))
   weights.append(float(DATASET_NAME_TO_WEIGHTS[name]))
 
 dataset = tf.data.Dataset.sample_from_datasets(datasets, weights=weights)
 
-# --- ADD THIS LINE ---
-# This tells the dataset to loop forever.
+
 dataset = dataset.repeat()
 
 # Larger shuffle buffer leads to better performance, but consumes more RAM
@@ -2717,42 +2716,6 @@ def _form_gda(local_data, global_shape):
 rng = jax.random.PRNGKey(0)
 
 # --- Define the path to your downloaded checkpoint ---
-PRETRAINED_PATH = '/app/rt_1_x_jax'  # The folder
-
-checkpointer = ocp.PyTreeCheckpointer()
-
-if os.path.exists(PRETRAINED_PATH):
-    print(f"Loading pre-trained checkpoint from: {PRETRAINED_PATH}")
-    
-    # 1. Get a sample batch to know the data structure
-    sample_batch = jax.tree_map(lambda x: x, next(train_iter))
-    
-    # 2. Restore the pre-trained model weights (params) and batch stats
-    restored_params = checkpointer.restore(PRETRAINED_PATH, item='params')
-    restored_batch_stats = checkpointer.restore(PRETRAINED_PATH, item='batch_stats')
-
-    # 3. Create a new TrainState
-    #    We use the LOADED weights but create a FRESH optimizer state
-    state = TrainState(
-        step=0,  # Start fine-tuning from step 0
-        params=restored_params,
-        batch_stats=restored_batch_stats,
-        opt_state=optimizer.init(restored_params) # Re-initialize the optimizer
-    )
-    print("✅ Successfully loaded pre-trained weights. Starting fine-tuning.")
-
-else:
-    print(f"WARNING: Pre-trained path not found. Initializing from scratch...")
-    sample_batch = jax.tree_map(_form_gda, sample_batch, global_data_shape)
-    rng, agent_rng = jax.random.split(rng)
-    state = create_train_state_jit(
-        batch=sample_batch, rng=agent_rng
-    )
-    
-'''
-rng = jax.random.PRNGKey(0)
-
-# --- Define the path to your downloaded checkpoint ---
 PRETRAINED_PATH = '/app/rt_1_x_jax'  # The folder you downloaded
 
 if os.path.exists(PRETRAINED_PATH):
@@ -2779,6 +2742,43 @@ if os.path.exists(PRETRAINED_PATH):
 else:
     print(f"WARNING: Pre-trained path not found ({PRETRAINED_PATH}). Initializing from scratch...")
     # This is the original "train from scratch" code
+    sample_batch = jax.tree_map(_form_gda, sample_batch, global_data_shape)
+    rng, agent_rng = jax.random.split(rng)
+    state = create_train_state_jit(
+        batch=sample_batch, rng=agent_rng
+    )
+       
+'''
+
+rng = jax.random.PRNGKey(0)
+
+# --- Define the path to your downloaded checkpoint ---
+PRETRAINED_PATH = '/app/rt_1_x_jax'  # The folder
+
+checkpointer = ocp.PyTreeCheckpointer()
+
+if os.path.exists(PRETRAINED_PATH):
+    print(f"Loading pre-trained checkpoint from: {PRETRAINED_PATH}")
+    
+    # 1. Get a sample batch to know the data structure
+    sample_batch = jax.tree_map(lambda x: x, next(train_iter))
+    
+    # 2. Restore the pre-trained model weights (params) and batch stats
+    restored_params = checkpointer.restore(PRETRAINED_PATH, item='params')
+    restored_batch_stats = checkpointer.restore(PRETRAINED_PATH, item='batch_stats')
+
+    # 3. Create a new TrainState
+    #    We use the LOADED weights but create a FRESH optimizer state
+    state = TrainState(
+        step=0,  # Start fine-tuning from step 0
+        params=restored_params,
+        batch_stats=restored_batch_stats,
+        opt_state=optimizer.init(restored_params) # Re-initialize the optimizer
+    )
+    print("✅ Successfully loaded pre-trained weights. Starting fine-tuning.")
+
+else:
+    print(f"WARNING: Pre-trained path not found. Initializing from scratch...")
     sample_batch = jax.tree_map(_form_gda, sample_batch, global_data_shape)
     rng, agent_rng = jax.random.split(rng)
     state = create_train_state_jit(
