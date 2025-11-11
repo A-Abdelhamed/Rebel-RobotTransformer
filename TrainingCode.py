@@ -804,9 +804,16 @@ def step_map_fn(step, map_observation: StepFnMapType, map_action: StepFnMapType)
 
 DATASET_NAME_TO_TRAJECTORY_DATASET_KWARGS = {
 
-      'IgusToolPicking': {
+    'IgusToolPicking': {
         'builder_dir': '/app/IgusToolPicking/IgusToolPicking',
-        'trajectory_length': 50,
+        'trajectory_length': 150,
+        'step_map_fn':functools.partial(step_map_fn,
+                                        map_observation=map_observation,
+                                        map_action=bridge_map_action)
+    },
+    'bridge': {
+        'builder_dir': 'gs://gresearch/robotics/bridge/0.1.0',
+        'trajectory_length': 15,
         'step_map_fn':functools.partial(step_map_fn,
                                         map_observation=map_observation,
                                         map_action=bridge_map_action)
@@ -828,7 +835,13 @@ DATASET_NAME_TO_TRAJECTORY_DATASET_KWARGS = {
                                         map_observation=taco_play_map_observation,
                                         map_action=taco_play_map_action)
     },
-
+    'berkeley_cable_routing': {
+        'builder_dir': 'gs://gresearch/robotics/berkeley_cable_routing/0.1.0',
+        'trajectory_length': 15,
+        'step_map_fn':functools.partial(step_map_fn,
+                                        map_observation=map_observation,
+                                        map_action=berkeley_cable_routing_map_action)
+    },
     # Jaco Play
     'jaco_play': {
         'builder_dir': 'gs://gresearch/robotics/jaco_play/0.1.0',
@@ -851,6 +864,13 @@ DATASET_NAME_TO_TRAJECTORY_DATASET_KWARGS = {
         'step_map_fn':functools.partial(step_map_fn,
                                         map_observation=map_observation,
                                         map_action=toto_map_action)
+    },
+        'berkeley_autolab_ur5': {
+        'builder_dir': 'gs://gresearch/robotics/berkeley_autolab_ur5/0.1.0',
+        'trajectory_length': 15,
+        'step_map_fn':functools.partial(step_map_fn,
+                                        map_observation=map_observation,
+                                        map_action=berkeley_autolab_ur5_map_action)
     }
 }
 
@@ -920,6 +940,7 @@ DATASET_NAME_TO_TRAJECTORY_DATASET = {k: get_trajectory_dataset(**v) for k, v in
 
 DATASET_NAME_TO_WEIGHTS = {
     'rt_1': 50,
+    'bridge':50,
     # 'rlds.kuka': 20,
     'IgusToolPicking': 100,
     'taco_play': 20,
