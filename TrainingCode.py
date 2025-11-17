@@ -2704,7 +2704,7 @@ def rt1_loss(
 
 # @title Set up the functions for training
 
-optimizer = optax.adam(learning_rate=1e-4, eps=1e-7) #try 3e-4
+optimizer = optax.adam(learning_rate=1e-4, eps=1e-7) #try 3e-4 from bridge and  5e-6 from jonathan masters thesis
 
 # Create the train state.
 # input: batch, rng, ds_info
@@ -2816,13 +2816,13 @@ jitted_train_step = jax.jit(
 )
 
 # Define how often you want to save the model
-save_every_steps = 100000
+save_every_steps = 100000 #try save every 10000 
 checkpoint_dir = '/app/rt1_checkpoints/'
 os.makedirs(checkpoint_dir, exist_ok=True) # Create the directory if it doesn't exist
 
 # @title Run the train loop
 
-num_train_steps = 1_000_000  # 1k for example, actual should be > 1M
+num_train_steps = 1_000_000  # 1k for example, actual should be > 1M --- try 60000
 log_loss_every_steps = 1000
 
 
