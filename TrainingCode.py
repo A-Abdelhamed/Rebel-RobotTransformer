@@ -2704,7 +2704,7 @@ def rt1_loss(
 
 # @title Set up the functions for training
 
-optimizer = optax.adam(learning_rate=1e-4, eps=1e-7)
+optimizer = optax.adam(learning_rate=1e-4, eps=1e-7) #try 3e-4
 
 # Create the train state.
 # input: batch, rng, ds_info
