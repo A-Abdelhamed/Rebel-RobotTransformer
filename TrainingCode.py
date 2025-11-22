@@ -2877,7 +2877,7 @@ if 'rng_repl' not in locals() or rng_repl is None:
 # ---------------------------
 
 # The RNG must be replicated.
-rng_repl = reshard(rng, shardings=replicate_sharding)
+# rng_repl = reshard(rng, shardings=replicate_sharding)
 
 print("Training started")
 
