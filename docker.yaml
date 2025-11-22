@@ -30,7 +30,7 @@ services:
               capabilities: [gpu]
 
     # This command just keeps the container running so you can connect
-    command: tail -f /dev/null
+    command: bash /app/start.sh
 
     # Keep these to allow you to attach
     tty: true

@@ -531,8 +531,41 @@ def _rescale_action(action):
 
   return action
 
-
 def bridge_map_action(to_step: rlds.Step, from_step: rlds.Step):
+  """Maps Bridge dataset action to action expected by the model."""
+
+  to_step['action']['world_vector'] = from_step['action']['world_vector']
+  to_step['action']['terminate_episode'] = terminate_bool_to_act(
+      from_step['action']['terminate_episode']
+  )
+
+  to_step['action']['rotation_delta'] = from_step['action']['rotation_delta']
+
+  open_gripper = from_step['action']['open_gripper']
+
+  possible_values = tf.constant([True, False], dtype=tf.bool)
+  eq = tf.equal(possible_values, open_gripper)
+
+  assert_op = tf.Assert(tf.reduce_any(eq), [open_gripper])
+
+  with tf.control_dependencies([assert_op]):
+    to_step['action']['gripper_closedness_action'] = tf.cond(
+        # for open_gripper in bridge dataset,
+        # 0 is fully closed and 1 is fully open
+        open_gripper,
+        # for Fractal data,
+        # gripper_closedness_action = -1 means opening the gripper and
+        # gripper_closedness_action = 1 means closing the gripper.
+        lambda: tf.constant([-1.0], dtype=tf.float32),
+        lambda: tf.constant([1.0], dtype=tf.float32),
+    )
+
+  to_step['action'] = _rescale_action(to_step['action'])
+
+
+
+
+def Mod_bridge_map_action(to_step: rlds.Step, from_step: rlds.Step):
   """Maps Bridge dataset action to action expected by the model.""" 
   to_step['action']['world_vector'] = from_step['observation']['vector_data'][:3]
   to_step['action']['terminate_episode'] = terminate_bool_to_act(
@@ -805,11 +838,11 @@ def step_map_fn(step, map_observation: StepFnMapType, map_action: StepFnMapType)
 DATASET_NAME_TO_TRAJECTORY_DATASET_KWARGS = {
 
     'IgusToolPicking': {
-        'builder_dir': '/app/IgusToolPicking/IgusToolPicking',
-        'trajectory_length': 150,
+        'builder_dir': '/app/IgusToolPicking/IgusToolPicking_Repaired_for_use',
+        'trajectory_length': 15,
         'step_map_fn':functools.partial(step_map_fn,
                                         map_observation=map_observation,
-                                        map_action=bridge_map_action)
+                                        map_action=Mod_bridge_map_action)
     },
     'bridge': {
         'builder_dir': 'gs://gresearch/robotics/bridge/0.1.0',
@@ -942,14 +975,14 @@ DATASET_NAME_TO_WEIGHTS = {
     'rt_1': 50,
     'bridge':50,
     # 'rlds.kuka': 20,
-    'IgusToolPicking': 100,
+    'IgusToolPicking': 500,
     'taco_play': 20,
     'jaco_play': 20,
-    #'berkeley_cable_routing': 20,
+    'berkeley_cable_routing': 20,
     #'roboturk': 10,
     #'nyu_door_opening_surprising_effectiveness': 5,
     'viola': 30,
-    #'berkeley_autolab_ur5': 5,
+    'berkeley_autolab_ur5': 5,
     #'language_table.language_table': 30,
     'toto':20,
 }
@@ -2497,6 +2530,13 @@ def reshard(tree, shardings):
   """
 
   def _make_global_arr(x, shard, shape):
+    # --- START OF FIX ---
+    import numpy as np
+    # If x is a raw number (like the step counter), turn it into a numpy array
+    if isinstance(x, (int, float)):
+        x = np.array(x)
+    # --- END OF FIX ---
+
     # Avoid unnecessary copies and transfers:
     if hasattr(x, "sharding") and x.sharding.is_equivalent_to(
         shard, len(shape)
@@ -2513,10 +2553,6 @@ def reshard(tree, shardings):
         for d, s in shard.addressable_devices_indices_map(shape).items()
     ]
     return jax.make_array_from_single_device_arrays(shape, shard, xs)
-
-  shapes = jax.tree_map(np.shape, tree)
-  shardings = tree_broadcast(shardings, tree)
-  return jax.tree_map(_make_global_arr, tree, shardings, shapes)
 
 def tree_broadcast(prefix, target):
   """Broadcasts a prefix tree to a full tree.
@@ -2704,7 +2740,7 @@ def rt1_loss(
 
 # @title Set up the functions for training
 
-optimizer = optax.adam(learning_rate=1e-4, eps=1e-7) #try 3e-4 from bridge and  5e-6 from jonathan masters thesis
+optimizer = optax.adam(learning_rate=3e-4, eps=1e-7) #try 3e-4 from bridge and  5e-6 from jonathan masters thesis
 
 # Create the train state.
 # input: batch, rng, ds_info
@@ -2816,19 +2852,30 @@ jitted_train_step = jax.jit(
 )
 
 # Define how often you want to save the model
-save_every_steps = 100000 #try save every 10000 
+save_every_steps = 10000 #try save every 10000 
 checkpoint_dir = '/app/rt1_checkpoints/'
 os.makedirs(checkpoint_dir, exist_ok=True) # Create the directory if it doesn't exist
 
 # @title Run the train loop
 
-num_train_steps = 1_000_000  # 1k for example, actual should be > 1M --- try 60000
+num_train_steps = 1_000_00  # 1k for example, actual should be > 1M --- try 60000
 log_loss_every_steps = 1000
 
 
 # The state should be resharded since we may have loaded pretrained weights
 # that need to be converted to jax.Arrays.
 state_repl = reshard(state, shardings=replicate_sharding)
+
+# --- FIX FOR MISSING RNG ---
+if 'rng_repl' not in locals() or rng_repl is None:
+    print("⚠️ rng_repl was None, creating a new one manually...")
+    import jax
+    # Create a new random key (seed 0)
+    _temp_rng = jax.random.PRNGKey(0)
+    # Replicate it across your GPUs just like the state
+    rng_repl = reshard(_temp_rng, shardings=replicate_sharding)
+# ---------------------------
+
 # The RNG must be replicated.
 rng_repl = reshard(rng, shardings=replicate_sharding)
 
