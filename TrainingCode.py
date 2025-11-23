@@ -2858,9 +2858,9 @@ os.makedirs(checkpoint_dir, exist_ok=True) # Create the directory if it doesn't 
 
 # @title Run the train loop
 
-num_train_steps = 1_000_00  # 1k for example, actual should be > 1M --- try 60000
+num_train_steps = 100_000  # 1k for example, actual should be > 1M --- try 60000
 log_loss_every_steps = 1000
-
+rng_repl = reshard(rng, shardings=replicate_sharding)
 
 # The state should be resharded since we may have loaded pretrained weights
 # that need to be converted to jax.Arrays.
