@@ -2770,8 +2770,6 @@ def _form_gda(local_data, global_shape):
       global_shape, sharding, arrays
   )
 
-rng = jax.random.PRNGKey(0)
-
 # --- Define the path to your downloaded checkpoint ---
 PRETRAINED_PATH = '/app/rt_1_x_jax'  # The folder you downloaded
 
