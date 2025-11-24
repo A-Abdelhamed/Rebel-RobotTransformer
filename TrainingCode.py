@@ -2858,31 +2858,22 @@ os.makedirs(checkpoint_dir, exist_ok=True) # Create the directory if it doesn't 
 
 num_train_steps = 100_000  # 1k for example, actual should be > 1M --- try 60000
 log_loss_every_steps = 1000
-rng_repl = reshard(rng, shardings=replicate_sharding)
 
-# The state should be resharded since we may have loaded pretrained weights
-# that need to be converted to jax.Arrays.
+# ---- FIX FOR PRNG ----
+rng_repl = jax.device_put_replicated(rng, jax.devices())
+# -----------------------
+
+# The state should be resharded
 state_repl = reshard(state, shardings=replicate_sharding)
 
-# --- FIX FOR MISSING RNG ---
-if 'rng_repl' not in locals() or rng_repl is None:
-    print("⚠️ rng_repl was None, creating a new one manually...")
-    import jax
-    # Create a new random key (seed 0)
-    _temp_rng = jax.random.PRNGKey(0)
-    # Replicate it across your GPUs just like the state
-    rng_repl = reshard(_temp_rng, shardings=replicate_sharding)
-# ---------------------------
-
-# The RNG must be replicated.
-# rng_repl = reshard(rng, shardings=replicate_sharding)
+print("Training started")
 
 print("Training started")
 
 for step in range(num_train_steps):
   is_last_step = step == num_train_steps
 
-  rng_repl = jax.random.fold_in(rng_repl, step)
+  rng_repl = jax.vmap(lambda k: jax.random.fold_in(k, step))(rng_repl)
 
   batch = next(train_iter)
   batch = jax.tree_map(_form_gda, batch, global_data_shape)
