@@ -1,8 +1,8 @@
-flax==0.10.2
-rlds
+flax==0.12.0
+rlds==0.1.8
 tensorflow_datasets
 numpy==1.26.4
-dm-reverb
+dm-reverb==0.14.0
 ipython
 pillow
 matplotlib
