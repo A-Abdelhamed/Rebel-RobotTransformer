@@ -1,4 +1,4 @@
-flax==0.12.0
+flax==0.10.2
 rlds==0.1.8
 tensorflow_datasets
 numpy==1.26.4
