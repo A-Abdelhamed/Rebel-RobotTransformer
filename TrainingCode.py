@@ -2530,14 +2530,7 @@ def reshard(tree, shardings):
   """
 
   def _make_global_arr(x, shard, shape):
-    # --- START OF FIX ---
-    import numpy as np
-    # If x is a raw number (like the step counter), turn it into a numpy array
-    if isinstance(x, (int, float)):
-        x = np.array(x)
-    # --- END OF FIX ---
-
-    # Avoid unnecessary copies and transfers:
+   # Avoid unnecessary copies and transfers:
     if hasattr(x, "sharding") and x.sharding.is_equivalent_to(
         shard, len(shape)
     ):  # pylint: disable=line-too-long
@@ -2553,6 +2546,10 @@ def reshard(tree, shardings):
         for d, s in shard.addressable_devices_indices_map(shape).items()
     ]
     return jax.make_array_from_single_device_arrays(shape, shard, xs)
+
+  shapes = jax.tree_map(np.shape, tree)
+  shardings = tree_broadcast(shardings, tree)
+  return jax.tree_map(_make_global_arr, tree, shardings, shapes)
 
 def tree_broadcast(prefix, target):
   """Broadcasts a prefix tree to a full tree.
@@ -2859,21 +2856,16 @@ os.makedirs(checkpoint_dir, exist_ok=True) # Create the directory if it doesn't 
 num_train_steps = 100_000  # 1k for example, actual should be > 1M --- try 60000
 log_loss_every_steps = 1000
 
-# ---- FIX FOR PRNG ----
-rng_repl = jax.device_put_replicated(rng, jax.devices())
-# -----------------------
 
 # The state should be resharded
 state_repl = reshard(state, shardings=replicate_sharding)
+rng_repl = reshard(rng, shardings=replicate_sharding)
+
+print('rng shpe is:', rng_repl.shape)
 
 print("Training started")
-
-print("Training started")
-
 for step in range(num_train_steps):
   is_last_step = step == num_train_steps
-
-  rng_repl = jax.vmap(lambda k: jax.random.fold_in(k, step))(rng_repl)
 
   batch = next(train_iter)
   batch = jax.tree_map(_form_gda, batch, global_data_shape)
@@ -2888,7 +2880,7 @@ for step in range(num_train_steps):
     
   if step % save_every_steps == 0 or is_last_step:
     # Get the state from the first device
-    state_to_save = jax.device_get(jax.tree_util.tree_map(lambda x: x[0], state_repl))
+    state_to_save = jax.tree_util.tree_map(jax.device_get, state_repl)
     
     # Save using the legacy flax.training.checkpoints
     checkpoints.save_checkpoint(
