@@ -20,6 +20,7 @@ pip install gdown
 pip install "jax[cuda12_pip]==0.4.38" -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
 pip install -r requirements.txt
 pip install gsutil
+pip install kaggle
 
 # 4. Install Google Cloud SDK
 curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg
@@ -31,7 +32,7 @@ apt-get install -y google-cloud-cli
 # (Only download if the folder doesn't exist yet to save time on restarts)
 if [ ! -d "/app/IgusToolPicking" ]; then
     echo "Downloading Igus dataset..."
-    gdown --id 1-RKD4Nj5dkjmbvYnr4xepmt77QaS3m7y -O /app/IgusToolPicking.zip
+    python DownloadDataset.py
     unzip /app/IgusToolPicking.zip -d /app/IgusToolPicking
     rm /app/IgusToolPicking.zip
 else
