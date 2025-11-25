@@ -33,7 +33,7 @@ apt-get install -y google-cloud-cli
 if [ ! -d "/app/IgusToolPicking" ]; then
     echo "Downloading Igus dataset..."
 	export KAGGLE_USERNAME=ahmedkzabdelhamed
-	export KAGGLE_KEY=KGAT_b6f3c0e66de27c534a9d69d8a1ffafca
+	export KAGGLE_KEY=d337c88281ad430b9f4868decbb4178f
     python DownloadDataset.py
     unzip /app/IgusToolPicking.zip -d /app/IgusToolPicking
     rm /app/IgusToolPicking.zip
