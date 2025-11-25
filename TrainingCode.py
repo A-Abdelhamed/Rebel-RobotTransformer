@@ -838,7 +838,7 @@ def step_map_fn(step, map_observation: StepFnMapType, map_action: StepFnMapType)
 DATASET_NAME_TO_TRAJECTORY_DATASET_KWARGS = {
 
     'IgusToolPicking': {
-        'builder_dir': '/app/IgusToolPicking/IgusToolPicking_Repaired_for_use',
+        'builder_dir': '/app/IgusToolPicking_Repaired_for_use',
         'trajectory_length': 15,
         'step_map_fn':functools.partial(step_map_fn,
                                         map_observation=map_observation,

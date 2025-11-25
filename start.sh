@@ -35,8 +35,6 @@ if [ ! -d "/app/IgusToolPicking" ]; then
 	export KAGGLE_USERNAME=ahmedkzabdelhamed
 	export KAGGLE_KEY=d337c88281ad430b9f4868decbb4178f
     python DownloadDataset.py
-    unzip /app/IgusToolPicking.zip -d /app/IgusToolPicking
-    rm /app/IgusToolPicking.zip
 else
     echo "Dataset already exists. Skipping download."
 fi
