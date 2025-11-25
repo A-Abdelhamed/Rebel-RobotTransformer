@@ -2530,6 +2530,9 @@ def reshard(tree, shardings):
   """
 
   def _make_global_arr(x, shard, shape):
+    
+    if isinstance(x, (int, float)):
+      x = np.array(x)
    # Avoid unnecessary copies and transfers:
     if hasattr(x, "sharding") and x.sharding.is_equivalent_to(
         shard, len(shape)
