@@ -2771,8 +2771,8 @@ def _form_gda(local_data, global_shape):
   )
 
 # --- Define the path to your downloaded checkpoint ---
-PRETRAINED_PATH = '/app/rt_1_x_jax'  # The folder you downloaded
-
+PRETRAINED_PATH = '/app/rt_1_x_jax/b321733791_75882326_000900000'  # The folder /rt_1_x_jax/b321733791_75882326_000900000
+rng = jax.random.PRNGKey(0)
 if os.path.exists(PRETRAINED_PATH):
     print(f"Loading pre-trained checkpoint from: {PRETRAINED_PATH} using flax.training.checkpoints")
 
@@ -2803,10 +2803,10 @@ else:
         batch=sample_batch, rng=agent_rng
     )
        
+
+
+
 '''
-
-rng = jax.random.PRNGKey(0)
-
 # --- Define the path to your downloaded checkpoint ---
 PRETRAINED_PATH = '/app/rt_1_x_jax'  # The folder
 
