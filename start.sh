@@ -50,3 +50,6 @@ echo "--- Setup Complete. Starting Training ---"
 # 7. RUN YOUR MAIN SCRIPT
 # This replaces the python command you were trying to run manually
 python TrainingCode.py
+echo "Training finished. Keeping container alive..."
+# This forces the container to stay running forever
+tail -f /dev/null
