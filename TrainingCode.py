@@ -843,7 +843,13 @@ DATASET_NAME_TO_TRAJECTORY_DATASET_KWARGS = {
         'step_map_fn':functools.partial(step_map_fn,
                                         map_observation=map_observation,
                                         map_action=Mod_bridge_map_action)
-    },
+    }
+}
+
+print(f"Datasets Downloaded")
+
+'''
+,
     'bridge': {
         'builder_dir': 'gs://gresearch/robotics/bridge/0.1.0',
         'trajectory_length': 15,
@@ -904,62 +910,6 @@ DATASET_NAME_TO_TRAJECTORY_DATASET_KWARGS = {
         'step_map_fn':functools.partial(step_map_fn,
                                         map_observation=map_observation,
                                         map_action=berkeley_autolab_ur5_map_action)
-    }
-}
-
-print(f"Datasets Downloaded")
-
-'''
-    #  Task Agnostic Robot Play
-    'my_bridge': {
-        'builder_dir': '/workspace/logs',
-        'trajectory_length': 15,
-        'step_map_fn':functools.partial(step_map_fn,
-                                        map_observation=Mymap_observation,
-                                        map_action=bridge_map_action)
-    },
-    #  Task Agnostic Robot Play
-    'taco_play': {
-        'builder_dir': '/app/Datasets/TACO',
-        'trajectory_length': 15,
-        'step_map_fn':functools.partial(step_map_fn,
-                                        map_observation=taco_play_map_observation,
-                                        map_action=taco_play_map_action)
-    },
-
-    # Jaco Play
-    'jaco_play': {
-        'builder_dir': '/app/Datasets/JACO',
-        'trajectory_length': 15,
-        'step_map_fn':functools.partial(step_map_fn,
-                                        map_observation=map_observation,
-                                        map_action=jaco_play_map_action)
-    },
-
-    # Austin VIOLA
-    'viola': {
-        'builder_dir': '/app/Datasets/Viola',
-        'trajectory_length': 15,
-        'step_map_fn':functools.partial(step_map_fn,
-                                        map_observation=viola_map_observation,
-                                        map_action=viola_map_action)
-    }
-    ,
-    
-    # Austin VIOLA
-    'viola': {
-        'builder_dir': 'gs://gresearch/robotics/viola/0.1.0',
-        'trajectory_length': 15,
-        'step_map_fn':functools.partial(step_map_fn,
-                                        map_observation=viola_map_observation,
-                                        map_action=viola_map_action)
-    },
-    'toto': {
-        'builder_dir': 'gs://gresearch/robotics/toto/0.1.0',
-        'trajectory_length': 15,
-        'step_map_fn':functools.partial(step_map_fn,
-                                        map_observation=map_observation,
-                                        map_action=toto_map_action)
     }
     
     '''
@@ -2740,7 +2690,7 @@ def rt1_loss(
 
 # @title Set up the functions for training
 
-optimizer = optax.adam(learning_rate=3e-4, eps=1e-7) #try 3e-4 from bridge and  5e-6 from jonathan masters thesis
+optimizer = optax.adam(learning_rate=5e-6, eps=1e-7) #try 3e-4 from bridge and  5e-6 from jonathan masters thesis
 
 # Create the train state.
 # input: batch, rng, ds_info
