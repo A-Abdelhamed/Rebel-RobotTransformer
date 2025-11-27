@@ -2532,6 +2532,8 @@ train_dataset = prepare_for_model_input(
     train_dataset, target_height=300, target_width=300, training=True
 )
 
+train_dataset = train_dataset.repeat()
+
 # Creating mesh and shardings.
 num_devices = len(jax.devices())
 mesh = jax.sharding.Mesh(
