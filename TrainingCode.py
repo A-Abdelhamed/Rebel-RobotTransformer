@@ -843,6 +843,67 @@ DATASET_NAME_TO_TRAJECTORY_DATASET_KWARGS = {
         'step_map_fn':functools.partial(step_map_fn,
                                         map_observation=map_observation,
                                         map_action=Mod_bridge_map_action)
+    },
+    'bridge': {
+        'builder_dir': 'gs://gresearch/robotics/bridge/0.1.0',
+        'trajectory_length': 15,
+        'step_map_fn':functools.partial(step_map_fn,
+                                        map_observation=map_observation,
+                                        map_action=bridge_map_action)
+    },
+    
+    'rt_1': {
+        'builder_dir': 'gs://gresearch/robotics/fractal20220817_data/0.1.0',
+        'trajectory_length': 15,
+        'step_map_fn':functools.partial(step_map_fn,
+                                        map_observation=map_observation,
+                                        map_action=rt_1_map_action)
+    },
+        #  Task Agnostic Robot Play
+    #  Task Agnostic Robot Play
+    'taco_play': {
+        'builder_dir': 'gs://gresearch/robotics/taco_play/0.1.0',
+        'trajectory_length': 15,
+        'step_map_fn':functools.partial(step_map_fn,
+                                        map_observation=taco_play_map_observation,
+                                        map_action=taco_play_map_action)
+    },
+    'berkeley_cable_routing': {
+        'builder_dir': 'gs://gresearch/robotics/berkeley_cable_routing/0.1.0',
+        'trajectory_length': 15,
+        'step_map_fn':functools.partial(step_map_fn,
+                                        map_observation=map_observation,
+                                        map_action=berkeley_cable_routing_map_action)
+    },
+    # Jaco Play
+    'jaco_play': {
+        'builder_dir': 'gs://gresearch/robotics/jaco_play/0.1.0',
+        'trajectory_length': 15,
+        'step_map_fn':functools.partial(step_map_fn,
+                                        map_observation=map_observation,
+                                        map_action=jaco_play_map_action)
+    },
+      # Austin VIOLA
+    'viola': {
+        'builder_dir': 'gs://gresearch/robotics/viola/0.1.0',
+        'trajectory_length': 15,
+        'step_map_fn':functools.partial(step_map_fn,
+                                        map_observation=viola_map_observation,
+                                        map_action=viola_map_action)
+    },
+    'toto': {
+        'builder_dir': 'gs://gresearch/robotics/toto/0.1.0',
+        'trajectory_length': 15,
+        'step_map_fn':functools.partial(step_map_fn,
+                                        map_observation=map_observation,
+                                        map_action=toto_map_action)
+    },
+        'berkeley_autolab_ur5': {
+        'builder_dir': 'gs://gresearch/robotics/berkeley_autolab_ur5/0.1.0',
+        'trajectory_length': 15,
+        'step_map_fn':functools.partial(step_map_fn,
+                                        map_observation=map_observation,
+                                        map_action=berkeley_autolab_ur5_map_action)
     }
 }
 
