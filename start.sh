@@ -52,4 +52,4 @@ echo "--- Setup Complete. Starting Training ---"
 #python TrainingCode.py
 #echo "Training finished. Keeping container alive..."
 # This forces the container to stay running forever
-tail -f /dev/null
+#tail -f /dev/null
